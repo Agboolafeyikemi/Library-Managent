@@ -51,6 +51,15 @@ const Home: NextPage = () => {
     }
   };
 
+  useEffect(() => {
+    connectWallet();
+    checkCorrectNetwork();
+  }, []);
+
+  useEffect(() => {
+    getBooks;
+  }, [books]);
+
   // Checks if wallet is connected to the correct network
   const checkCorrectNetwork = async () => {
     const { ethereum } = window;
@@ -126,9 +135,10 @@ const Home: NextPage = () => {
   };
 
   const submitBook = async () => {
-    let book = {
+    console.log("su--");
+    let book: Book = {
       name: bookName,
-      year: parseInt(bookYear),
+      year: bookYear,
       author: bookAuthor,
       finished: bookFinished == "yes" ? true : false,
     };
@@ -153,38 +163,54 @@ const Home: NextPage = () => {
         );
 
         console.log(libraryTx);
+        // setBooks();
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error: any) {
       console.log("Error Submitting new Book", error);
       setTxError(error.message);
+    } finally {
+      setBookFinished("");
+      setBookAuthor("");
+      setBookName("");
+      setBookYear("");
+      setBooks([
+        {
+          name: bookName,
+          year: bookYear,
+          author: bookAuthor,
+          finished: bookFinished == "yes" ? true : false,
+        },
+      ]);
     }
   };
   interface Book {
-    id: string;
+    id?: string;
     name: string;
     year: string;
     author: string;
-    clickBookFinished: () => void;
+    clickBookFinished?: () => void;
     finished: boolean;
   }
   return (
     <div className="flex flex-col items-center bg-[#f3f6f4] text-[#6a50aa] min-h-screen">
       <div className="trasition hover:rotate-180 hover:scale-105 transition duration-500 ease-in-out"></div>
-      <h2 className="text-3xl font-bold mb-20 mt-12">
+      <h2 className="text-3xl font-bold mb-10 mt-12">
         Manage your Library Catalog
       </h2>
-      {currentAccount === "" ? (
+      {currentAccount === "" && (
         <button
           className="text-2xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out"
           onClick={connectWallet}
         >
           Connect Wallet
         </button>
-      ) : correctNetwork ? (
+      )}
+      {correctNetwork && (
         <h4 className="text-3xl font-bold mb-20 mt-12">Wallet Connected</h4>
-      ) : (
+      )}
+      {!correctNetwork && currentAccount && (
         <div className="flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3">
           <div>----------------------------------------</div>
           <div>Please connect to the Rinkeby Testnet</div>
@@ -192,59 +218,93 @@ const Home: NextPage = () => {
           <div>----------------------------------------</div>
         </div>
       )}
-      <div className="text-xl font-semibold mb-20 mt-4">
-        <input
-          className="text-xl font-bold mb-2 mt-1"
-          type="text"
-          placeholder="Book Name"
-          value={bookName}
-          onChange={(e) => setBookName(e.target.value)}
-        />
-        <br />
-        <input
-          className="text-xl font-bold mb-2 mt-1"
-          type="text"
-          placeholder="Book Author"
-          value={bookAuthor}
-          onChange={(e) => setBookAuthor(e.target.value)}
-        />
-        <br />
-        <input
-          className="text-xl font-bold mb-2 mt-1"
-          type="text"
-          placeholder="Book Year"
-          value={bookYear}
-          onChange={(e) => setBookYear(e.target.value)}
-        />
-        <br />
-        <label>
-          Have you Finished reading this book?
+      <div className="w-2/4 text-xl font-semibold mb-20 mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            placeholder="username"
+          >
+            Name
+          </label>
+          <input
+            className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            placeholder="Book Name"
+            value={bookName}
+            onChange={(e) => setBookName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            placeholder="username"
+          >
+            Author
+          </label>
+          <input
+            className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            placeholder="Book Author"
+            value={bookAuthor}
+            onChange={(e) => setBookAuthor(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            placeholder="username"
+          >
+            Year
+          </label>
+          <input
+            className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="date"
+            placeholder="Book Year"
+            value={bookYear}
+            onChange={(e) => setBookYear(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            placeholder="countries"
+            className="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+          >
+            Have you Finished reading this book?
+          </label>
           <select
             value={bookFinished}
             onChange={(e) => setBookFinished(e.target.value)}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option value="yes">yes</option>
-            <option value="no">no</option>
+            <option selected>NO</option>
+            <option value="US">YES</option>
           </select>
-        </label>
+        </div>
         <button
-          className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out"
+          className="mt-5 text-xl font-bold py-3 px-12 bg-[#f1c232] block rounded-lg  hover:scale-105 transition duration-500 ease-in-out"
           onClick={submitBook}
         >
           Add Book
         </button>
       </div>
+      <div className="mt-10 mb-10 w-2/4">
+        <button
+          className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-2 hover:scale-105 transition duration-500 ease-in-out"
+          onClick={getBooks}
+        >
+          Get Books
+        </button>
+        <div className="border-b-2 border-grey-500 "></div>
+      </div>
       {
         <div className="flex flex-col justify-center items-center">
-          <div className="font-semibold text-lg text-center mb-4">
-            Books List
-          </div>
-          <button
-            className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out"
-            onClick={getBooks}
-          >
-            Get Books
-          </button>
+          {books.length > 0 && (
+            <div className="font-semibold text-lg text-center mb-4">
+              Books List
+            </div>
+          )}
           {books.map((book: Book) => (
             <Book
               key={book.id}
