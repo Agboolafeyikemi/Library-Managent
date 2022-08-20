@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
   const [txError, setTxError] = useState(null);
 
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [bookName, setBookName] = useState("");
   const [bookAuthor, setBookAuthor] = useState("");
   const [bookYear, setBookYear] = useState("");
@@ -260,7 +260,7 @@ const Home: NextPage = () => {
           </label>
           <input
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="date"
+            type="number"
             placeholder="Book Year"
             value={bookYear}
             onChange={(e) => setBookYear(e.target.value)}
@@ -298,17 +298,15 @@ const Home: NextPage = () => {
         </button>
         <div className="border-b-2 border-grey-500 "></div>
       </div>
+      {books.length > 0 && (
+        <div className="font-semibold text-lg text-center mb-4">Books List</div>
+      )}
       {
-        <div className="flex flex-col justify-center items-center">
-          {books.length > 0 && (
-            <div className="font-semibold text-lg text-center mb-4">
-              Books List
-            </div>
-          )}
-          {books.map((book: Book) => (
+        <div className="flex flex-row flex-wrap justify-center items-center w-2/4 text-xl font-semibold mb-20 mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          {books.map((book: Book, index) => (
             <Book
               key={book.id}
-              id={parseInt(book.id)}
+              id={index}
               name={book.name}
               year={parseInt(book.year).toString()}
               author={book.author}

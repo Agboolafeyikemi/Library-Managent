@@ -28,6 +28,7 @@ const Container = styled.div`
   font-weight: bold;
   color: var(--black);
   transition: background 0.4s linear;
+  margin: 5px;
   > .first {
     font-family: var(--font-2);
     > p {
@@ -154,11 +155,11 @@ const Book = ({ id, name, year, author, finished, clickBookFinished }) => {
   return (
     <Container>
       <div className="first">
-        <span>{name}</span>
+        <span>Name:{name}</span>
         <br />
-        <span>{author}</span>
+        <span>Author:{author}</span>
         <br />
-        <span>{year}</span>
+        <span>Year:{year}</span>
         <br />
         <span>
           {finished === "false" ? (
