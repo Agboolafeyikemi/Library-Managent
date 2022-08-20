@@ -2,12 +2,14 @@ import { LibraryContractAddress } from "../config.js";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
+import NextPage from "next/app";
 
 import Library from "../utils/Library.json";
 
 import Book from "./components/Books";
-
+declare var window: any;
 const Home: NextPage = () => {
+  // declare var window: any;
   const [currentAccount, setCurrentAccount] = useState("");
   const [correctNetwork, setCorrectNetwork] = useState(false);
 
@@ -90,13 +92,13 @@ const Home: NextPage = () => {
       } else {
         console.log("Ethereum object doesn't exist!");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setTxError(error.message);
     }
   };
 
-  const clickBookFinished = async (id) => {
+  const clickBookFinished = async (id: number) => {
     console.log(id);
 
     try {
@@ -117,7 +119,7 @@ const Home: NextPage = () => {
       } else {
         console.log("Ethereum object doesn't exist!");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error Submitting new Book", error);
       setTxError(error.message);
     }
@@ -154,12 +156,19 @@ const Home: NextPage = () => {
       } else {
         console.log("Ethereum object doesn't exist!");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error Submitting new Book", error);
       setTxError(error.message);
     }
   };
-
+  interface Book {
+    id: string;
+    name: string;
+    year: string;
+    author: string;
+    clickBookFinished: () => void;
+    finished: boolean;
+  }
   return (
     <div className="flex flex-col items-center bg-[#f3f6f4] text-[#6a50aa] min-h-screen">
       <div className="trasition hover:rotate-180 hover:scale-105 transition duration-500 ease-in-out"></div>
@@ -236,7 +245,7 @@ const Home: NextPage = () => {
           >
             Get Books
           </button>
-          {books.map((book) => (
+          {books.map((book: Book) => (
             <Book
               key={book.id}
               id={parseInt(book.id)}
