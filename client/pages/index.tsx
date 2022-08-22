@@ -2,13 +2,13 @@ import { LibraryContractAddress } from "../config.js";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
-import NextPage from "next/app";
+// import NextPage from "next/app";
 
 import Library from "../utils/Library.json";
 
 import Book from "./components/Books";
 declare var window: any;
-const Home: NextPage = () => {
+const Home = () => {
   // declare var window: any;
   const [currentAccount, setCurrentAccount] = useState("");
   const [correctNetwork, setCorrectNetwork] = useState(false);
