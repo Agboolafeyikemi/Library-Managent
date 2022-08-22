@@ -8,7 +8,7 @@ import Library from "../utils/Library.json";
 
 import Book from "./components/Books";
 declare var window: any;
-const Home = () => {
+const Home: React.FC = () => {
   // declare var window: any;
   const [currentAccount, setCurrentAccount] = useState("");
   const [correctNetwork, setCorrectNetwork] = useState(false);
